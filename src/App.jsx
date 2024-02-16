@@ -1,59 +1,31 @@
-import { useState } from "react"
+import React, { useState } from 'react';
+import axios from 'axios';
+import ImageList from './Components/ImageList/ImageList';
+import SearchForm from './Components/SearchForm/SearchForm';
 
+const API_KEY = 'G3YYz9YM-CPN8Fn7WANKl_JprD_NnU-SZRK35hPWJmc'; 
+const App = () => {
+  const [images, setImages] = useState([]);
 
-function App() {
-  const [color, setColor] = useState("olive")
+  const handleSearch = async (query) => {
+    try {
+      const response = await axios.get(`https://api.unsplash.com/search/photos/?query=${query}&client_id=${API_KEY}`);
+      setImages(response.data.results);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    }
+  };
 
   return (
-    <div className="w-full h-screen duration-200"
-      style={{ backgroundColor: color }}
-    >
-      <div className="fixed flex flex-wrap justify-center bottom-12 inset-x-0 px-2">
-        <div className="flex flex-wrap justify-center gap-3 shadow-lg bg-white px-3 py-2 rounded-3xl">
-          <button
-            onClick={() => setColor("red")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "red" }}
-          >Red</button>
-          <button
-            onClick={() => setColor("green")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "green" }}
-          >Green</button>
-          <button
-            onClick={() => setColor("blue")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "blue" }}
-          >Blue</button>
-          <button
-            onClick={() => setColor("aqua")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "aqua" }}
-          >Aqua</button>
-          <button
-            onClick={() => setColor("violet")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "violet" }}
-          >Violet </button>
-          <button
-            onClick={() => setColor("black")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "black" }}
-          >Black </button>
-          <button
-            onClick={() => setColor("pink")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "pink" }}
-          >Pink </button>
-          <button
-            onClick={() => setColor("yellow")}
-            className="outline-none px-4 py-1 rounded-full text-white shadow-lg"
-            style={{ backgroundColor: "yellow" }}
-          >yellow </button>
-        </div>
+    <div className="container mx-auto p-4 flex flex-col items-center">
+      <h1 className="text-3xl font-extrabold mb-4 text-center text-blue-600">Image Finder</h1>
+
+      <SearchForm onSubmit={handleSearch} />
+      <div className="mt-8">
+        <ImageList images={images} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
